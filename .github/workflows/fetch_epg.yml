@@ -37,11 +37,8 @@ jobs:
       - name: Check PHP Version
         working-directory: ./tvepg
         run: |
-          pwd
-          ls
           php -v
-          php ./deploy/info.php
-
+          
       - name: do_fetch_epg
         working-directory: ./tvepg
         run: |
