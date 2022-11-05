@@ -38,7 +38,7 @@ jobs:
         working-directory: ./tvepg
         run: |
           pwd
-          ll
+          ls
           php -v
           php ./deploy/info.php
 
