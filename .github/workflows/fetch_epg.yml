@@ -29,7 +29,7 @@ jobs:
 
       - name: Clone source code
         env:
-          REPO_URL: https://github.com/slipdaly/TVproxy.git
+          REPO_URL: git@github.com:slipdaly/TVproxy.git
           REPO_BRANCH: master
         run: |
           rm -rf tvepg
