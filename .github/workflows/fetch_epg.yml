@@ -1,0 +1,82 @@
+#=================================================
+# Description: Fetch EPG using GitHub Actions
+# Lisence: MIT
+# Author: slipdaly
+#=================================================
+
+name: fetch_epg
+
+on:
+  schedule:
+    - cron: 30 16 * * 4
+
+  watch:
+    types: [ started ]
+
+jobs:
+  fetch_epg:
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Clone source code
+        env:
+          REPO_URL: https://github.com/slipdaly/TVproxy.git
+          REPO_BRANCH: master
+        run: |
+          rm -rf tvepg
+          git clone --depth 1 $REPO_URL -b $REPO_BRANCH tvepg
+
+      - name: Check PHP Version
+        working-directory: ./tvepg
+        run: |
+          php -v
+          php ./deploy/info.php
+
+      - name: do_fetch_epg
+        working-directory: ./tvepg
+        run: |
+          php ./deploy/epg/cron_epg
+          echo $(date +%s) > ./deploy/epg/epg_time
+          [ -f "./deploy/epg/epg.xml.gz" ] && echo "epgStatus=0" >> $GITHUB_ENV
+      - name: Assemble logs artifact
+        working-directory: ./tvepg
+        run: |
+          find ./deploy/epg/logs/ -name "*.log" | xargs -i zip -j -9 ./deploy/epg/fetchLogs.zip {}
+
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        if: ${{ env.epgStatus }} == 0 && !cancelled()
+        with:
+          keep_latest: 0
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload epg file to release
+        working-directory: ./tvepg
+        uses: softprops/action-gh-release@v1
+        if: ${{ env.epgStatus }} == 0 && !cancelled()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1
+          files: |
+            ./deploy/epg/epg_time
+            ./deploy/epg/epg.xml.gz
+            ./deploy/epg/fetchLogs.zip
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 10
+          keep_minimum_runs: 3
+
