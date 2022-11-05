@@ -75,7 +75,7 @@ jobs:
             ./deploy/epg/fetchLogs.zip
 
       - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
+        uses: slipdaly/delete-workflow-runs@main
         with:
           retain_days: 10
           keep_minimum_runs: 3
