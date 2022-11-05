@@ -20,25 +20,25 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v3
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
 
-      - name: Clone source code
-        env:
-          REPO_URL: git@github.com:slipdaly/TVproxy.git
-          REPO_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-        run: |
-          rm -rf tvepg
-          git clone --depth 1 $REPO_URL -b $REPO_BRANCH tvepg
+      - name: Checkout private source code
+        uses: actions/checkout@v3
+        with:
+          repository: slipdaly/TVproxy
+          token: ${{ secrets.ACTIONS_TOKEN }} # `GH_PAT` is a secret that contains your PAT
+          path: tvepg
 
       - name: Check PHP Version
         working-directory: ./tvepg
         run: |
+          pwd
+          ll
           php -v
           php ./deploy/info.php
 
