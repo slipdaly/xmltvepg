@@ -77,8 +77,8 @@ jobs:
             ./tvepg/deploy/epg/fetchLogs.zip
 
       - name: Delete workflow runs
-        uses: slipdaly/delete-workflow-runs@main
+        uses: Mattraks/delete-workflow-runs@v2
         with:
-          retain_days: 10
+          retain_days: 2
           keep_minimum_runs: 3
 
