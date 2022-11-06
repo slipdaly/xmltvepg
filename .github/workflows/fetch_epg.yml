@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.22.0
         with:
           php-version: '7.4'
 
@@ -77,7 +77,7 @@ jobs:
             ./tvepg/deploy/epg/fetchLogs.zip
 
       - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
+        uses: Mattraks/delete-workflow-runs@v2.0.3
         with:
           retain_days: 2
           keep_minimum_runs: 3
