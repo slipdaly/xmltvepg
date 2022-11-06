@@ -68,6 +68,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          draft: false
+          prerelease: false
           tag_name: v1
           files: |
             ./tvepg/deploy/epg/epg_time
