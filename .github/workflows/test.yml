@@ -61,17 +61,24 @@ jobs:
           repository: slipdaly/slipdaly.github.io
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: pages
-          run: |
-            pwd
-            ls
-            cp ../tvepg/deploy/epg/epg_time ./pages/epg/
-            cp ../tvepg/deploy/epg/epg.xml.gz ./pages/epg/
-            date > generated.txt
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git add .
-            git commit -m "generated"
-            git push
+      
+      - name: copy to pages
+        if: ${{ env.epgStatus }} == 0 && !cancelled()
+        working-directory: ./pages
+        run: |
+          pwd
+          ls
+          cp ../tvepg/deploy/epg/epg.xml.gz ./epg/
+          cp ../tvepg/deploy/epg/epg_time ./epg/
+          [ -f "./epg/epg.xml.gz" ] && echo "pubStatus=0" >> $GITHUB_ENV
+          
+      - name: commit pages  
+        if: ${{ env.pubStatus }} == 0 && !cancelled()
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          repository: ./pages
+          commit_message: auto commit epg
+         
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.3
