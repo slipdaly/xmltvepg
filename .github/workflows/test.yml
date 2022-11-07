@@ -4,7 +4,7 @@
 # Author: slipdaly
 #=================================================
 
-name: fetch_epg
+name: test
 
 on:
 
