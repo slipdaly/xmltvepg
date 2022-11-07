@@ -7,11 +7,6 @@
 name: fetch_epg
 
 on:
-  schedule:
-    - cron: 10 18 * * *
-    - cron: 10 22 * * *
-    - cron: 10 04 * * *
-    - cron: 10 09 * * *
 
   watch:
     types: [ started ]
