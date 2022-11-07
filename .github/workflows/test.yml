@@ -53,6 +53,23 @@ jobs:
           php ./deploy/epg/cron_epg
           echo $(date +%s) > ./deploy/epg/epg_time
           [ -f "./deploy/epg/epg.xml.gz" ] && echo "epgStatus=0" >> $GITHUB_ENV
+          
+      - name: Checkout slipdaly.github.io
+        uses: actions/checkout@v3
+        with:
+          repository: slipdaly/slipdaly.github.io
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: pages
+          run: |
+            pwd
+            cp ./tvepg/deploy/epg/epg_time ./pages/epg/
+            cp ./tvepg/deploy/epg/epg.xml.gz ./pages/epg/
+            date > generated.txt
+            git config slipdaly github-actions
+            git config ghtscgm@aliyun.com github-actions@github.com
+            git add .
+            git commit -m "generated"
+            git push
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.3
