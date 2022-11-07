@@ -1,0 +1,59 @@
+#=================================================
+# Description: Fetch EPG using GitHub Actions
+# Lisence: MIT
+# Author: slipdaly
+#=================================================
+
+name: fetch_epg
+
+on:
+  schedule:
+    - cron: 10 18 * * *
+    - cron: 10 22 * * *
+    - cron: 10 04 * * *
+    - cron: 10 09 * * *
+
+  watch:
+    types: [ started ]
+
+jobs:
+  fetch_epg:
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: '7.4'
+
+      - name: Checkout private source code
+        uses: actions/checkout@v3
+        with:
+          repository: slipdaly/TVproxy
+          token: ${{ secrets.ACTIONS_TOKEN }} # `GH_PAT` is a secret that contains your PAT
+          path: tvepg
+
+      - name: Check PHP Version
+        working-directory: ./tvepg
+        run: |
+          php -v
+          
+      - name: do_fetch_epg
+        working-directory: ./tvepg
+        run: |
+          rm -rf ./deploy/epg/epg.xml.gz ./deploy/epg/epg.xml ./deploy/epg/logs/*.log
+          echo "CCTV7,http://127.0.0.1" > ./deploy/tvlist/sxDiyp.txt
+          echo "CCTV13,http://127.0.0.1" >> ./deploy/tvlist/sxDiyp.txt
+          php ./deploy/epg/cron_epg
+          echo $(date +%s) > ./deploy/epg/epg_time
+          [ -f "./deploy/epg/epg.xml.gz" ] && echo "epgStatus=0" >> $GITHUB_ENV
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2.0.3
+        with:
+          retain_days: 2
+          keep_minimum_runs: 3
