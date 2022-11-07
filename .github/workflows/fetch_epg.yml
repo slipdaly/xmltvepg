@@ -49,7 +49,31 @@ jobs:
           php ./deploy/epg/cron_epg
           echo $(date +%s) > ./deploy/epg/epg_time
           [ -f "./deploy/epg/epg.xml.gz" ] && echo "epgStatus=0" >> $GITHUB_ENV
-      - name: Assemble logs artifact
+      
+      - name: Checkout slipdaly.github.io
+        uses: actions/checkout@v3
+        if: ${{ env.epgStatus }} == 0 && !cancelled()
+        with:
+          repository: slipdaly/slipdaly.github.io
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: pages
+      
+      - name: copy to pages
+        if: ${{ env.epgStatus }} == 0 && !cancelled()
+        working-directory: ./pages
+        run: |
+          cp ../tvepg/deploy/epg/epg.xml.gz ./epg/
+          cp ../tvepg/deploy/epg/epg_time ./epg/
+          [ -f "./epg/epg.xml.gz" ] && echo "pubStatus=0" >> $GITHUB_ENV
+          
+      - name: commit to pages  
+        if: ${{ env.pubStatus }} == 0 && !cancelled()
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          repository: ./pages
+          commit_message: auto commit epg by bot
+      
+      - name: zip logs
         working-directory: ./tvepg
         run: |
           find ./deploy/epg/logs/ -name "*.log" | xargs -i zip -j -9 ./deploy/epg/fetchLogs.zip {}
@@ -80,6 +104,6 @@ jobs:
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.3
         with:
-          retain_days: 2
+          retain_days: 1
           keep_minimum_runs: 3
 
