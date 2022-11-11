@@ -94,6 +94,11 @@ jobs:
           delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: sleep one minute
+        run: |
+          sleep 1m
+          echo "continue task"
 
       - name: Upload epg file to release
         uses: softprops/action-gh-release@v1
