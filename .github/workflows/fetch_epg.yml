@@ -113,6 +113,11 @@ jobs:
             ./tvepg/deploy/epg/epg_time
             ./tvepg/deploy/epg/epg.xml.gz
             ./tvepg/deploy/epg/fetchLogs.zip
+            
+      - name: sleep last one minute
+        run: |
+          sleep 1m
+          echo "continue last step"
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.3
