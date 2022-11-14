@@ -46,7 +46,7 @@ jobs:
         run: |
           echo "currentTime is $(date)"
           nslookup portal.gcable.cn
-          curl --connect-timeout 10 -o /dev/null -s -w time_namelookup:"	"%{time_namelookup}" "time_connect:"		"%{time_connect}" "time_appconnect:"	"%{time_appconnect}" "time_pretransfer:"	"%{time_pretransfer}" "time_starttransfer:"	"%{time_starttransfer}" "time_total:"		"%{time_total}" "time_redirect:"		"%{time_redirect}" " http://epg.slipdaly.eu.org/
+          curl --connect-timeout 10 -o /dev/null -s -w time_namelookup:"	"%{time_namelookup}" "time_connect:"		"%{time_connect}" "time_appconnect:"	"%{time_appconnect}" "time_pretransfer:"	"%{time_pretransfer}" "time_starttransfer:"	"%{time_starttransfer}" "time_total:"		"%{time_total}" "time_redirect:"		"%{time_redirect}" " http://www.baidu.com/
           
           echo "end"
          
