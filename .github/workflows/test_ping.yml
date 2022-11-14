@@ -37,7 +37,6 @@ jobs:
         run: |
           echo "currentTime is $(date)"
           nslookup portal.gcable.cn
-          cat /etc/resolvconf/resolv.conf.d/base
       - name: setTimeZone
         uses: szenius/set-timezone@v1.1
         with:
@@ -50,5 +49,4 @@ jobs:
           curl --connect-timeout 10 -o /dev/null -s -w time_namelookup:"	"%{time_namelookup}" "time_connect:"		"%{time_connect}" "time_appconnect:"	"%{time_appconnect}" "time_pretransfer:"	"%{time_pretransfer}" "time_starttransfer:"	"%{time_starttransfer}" "time_total:"		"%{time_total}" "time_redirect:"		"%{time_redirect}" " http://portal.gcable.cn:8080/PortalServer-App/new/ptl_ipvp_live_live008
           
           echo "end"
-          cat /etc/resolvconf/resolv.conf.d/base
          
