@@ -30,6 +30,10 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
     steps:
+      - name: set time zone
+        uses: szenius/set-timezone@v1.1
+        with:
+         timezoneLinux: "Asia/Shanghai"
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -49,6 +53,7 @@ jobs:
         working-directory: ./tvepg
         run: |
           php -v
+          echo "currentTime is $(date)"
           
       - name: do_fetch_epg
         working-directory: ./tvepg
