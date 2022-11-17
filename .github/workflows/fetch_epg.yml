@@ -61,6 +61,7 @@ jobs:
           rm -rf ./deploy/epg/epg.xml.gz ./deploy/epg/epg.xml ./deploy/epg/logs/*.log
           php ./deploy/epg/cron_epg
           echo $(date +%s) > ./deploy/epg/epg_time
+          echo "ARTIFACT_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           [ -f "./deploy/epg/epg.xml.gz" ] && echo "epgStatus=0" >> $GITHUB_ENV
       
       - name: Checkout slipdaly.github.io
@@ -104,6 +105,17 @@ jobs:
         run: |
           sleep 1m
           echo "continue task"
+      
+      - name: upload-epg-artifact
+        uses: actions/upload-artifact@v3
+        if: ${{ env.epgStatus }} == 0 && !cancelled()
+        with:
+          name: epg-artifact_${{ env.ARTIFACT_DATE }}
+          path: |
+            ./tvepg/deploy/epg/epg_time
+            ./tvepg/deploy/epg/epg.xml.gz
+            ./tvepg/deploy/epg/fetchLogs.zip
+      
 
       - name: Upload epg file to release
         uses: softprops/action-gh-release@v1
@@ -117,7 +129,6 @@ jobs:
           files: |
             ./tvepg/deploy/epg/epg_time
             ./tvepg/deploy/epg/epg.xml.gz
-            ./tvepg/deploy/epg/fetchLogs.zip
             
       - name: sleep last one minute
         run: |
