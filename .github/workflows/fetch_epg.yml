@@ -101,9 +101,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: sleep one minute
+      - name: sleep 10s
         run: |
-          sleep 1m
+          sleep 10s
           echo "continue task"
       
       - name: upload-epg-artifact
@@ -130,9 +130,9 @@ jobs:
             ./tvepg/deploy/epg/epg_time
             ./tvepg/deploy/epg/epg.xml.gz
             
-      - name: sleep last one minute
+      - name: sleep last 10s
         run: |
-          sleep 1m
+          sleep 10s
           echo "continue last step"
 
       - name: Delete workflow runs
