@@ -11,7 +11,7 @@ on:
     - cron: 10 18 * * *
     - cron: 10 22 * * *
     - cron: 10 04 * * *
-    #- cron: 10 09 * * *
+    - cron: 10 09 * * *
 
   workflow_dispatch:
       # Inputs the workflow accepts.
@@ -135,11 +135,11 @@ jobs:
           sleep 10s
           echo "continue last step"
 
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2.0.3
+      - name: Delete old workflow runs
+        uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
         with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 1
-          keep_minimum_runs: 3
+          repository: ${{ github.repository }}   # replace this with your own repository
+          older-than-seconds: 86400              # remove all workflow runs older than 1 day
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
