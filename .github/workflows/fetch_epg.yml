@@ -58,6 +58,7 @@ jobs:
       - name: do_fetch_epg
         working-directory: ./tvepg
         run: |
+          php ./deploy/epg/crongeturl.php
           rm -rf ./deploy/epg/epg.xml.gz ./deploy/epg/epg.xml ./deploy/epg/logs/*.log
           php ./deploy/epg/cron_epg
           echo $(date +%s) > ./deploy/epg/epg_time
