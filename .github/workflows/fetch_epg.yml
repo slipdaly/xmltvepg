@@ -108,7 +108,7 @@ jobs:
           echo "continue task"
       
       - name: upload-epg-artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ env.epgStatus }} == 0 && !cancelled()
         with:
           name: epg-artifact_${{ env.ARTIFACT_DATE }}
